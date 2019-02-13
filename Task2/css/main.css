@@ -1,0 +1,57 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.headline {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.header-field {
+    display: flex;
+    justify-content: left;
+    text-align: center;
+}
+
+.header-field__button {
+    border: 0;
+    padding: 3px;
+    margin: 5px 0;
+    width: 10%;
+}
+
+.header-field__span {
+    font-size: 1.4em;
+    width: 85%;
+    text-align: center;
+}
+
+.tennis-field {
+    background-color: rgb(228, 209, 40);
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.left-racket {
+    background-color: rgb(33, 151, 43);
+}
+
+.right-racket {
+    background-color: rgb(83, 92, 216);
+}
+
+.ball {
+    background-color: rgb(190, 53, 11);
+    border-radius: 50%;
+}
