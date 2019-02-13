@@ -27,3 +27,15 @@
     background-color: rgb(83, 92, 216);
     position: absolute;
 }
+
+.score-context {
+    margin: 20px 60px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.start-button {
+    padding: 2px;
+    margin-right: 20px;
+}

@@ -91,6 +91,14 @@ class Ball extends Figure {
         element.style.top = (coords.y + this.getSpeedY()) + 'px';
     }
 
+    stop() {
+        let element = this.getElement(),
+            coord = this.getCoords();
+
+        element.style.left = coord.x + 'px';
+        element.style.top = coord.y + 'px';
+    }
+
     changeDirectionX() {
         this.setSpeedX(-this.getSpeedX());
     }
@@ -164,30 +172,25 @@ document.querySelector(gameFieldClassNameSelector).appendChild(ball.draw());
 document.querySelector(gameFieldClassNameSelector).appendChild(rightRacket.draw());
 
 ball.update();
-ball.setSpeedX(randomFunc(-10, 10));
-ball.setSpeedY(randomFunc(-10, 10));
 leftRacket.update();
 rightRacket.update();
 
 document.addEventListener('keydown', function (eo) {
-    let keyCode = eo.keyCode,
-        leftRacketCoords = leftRacket.getCoords(),
-        rightRacketCoords = rightRacket.getCoords();
+    let keyCode = eo.keyCode;
 
-    if (keyCode === 16) {
-        leftRacket.moveUp();
-    }
-
-    if (keyCode === 17) {
-        leftRacket.moveDown();
-    }
-
-    if (keyCode === 38) {
-        rightRacket.moveUp();
-    }
-
-    if (keyCode === 40) {
-        rightRacket.moveDown();
+    switch (keyCode) {
+        case 16:
+            leftRacket.moveUp();
+            break;
+        case 17:
+            leftRacket.moveDown();
+            break;
+        case 38:
+            rightRacket.moveUp();
+            break;
+        case 40:
+            rightRacket.moveDown();
+            break;
     }
 }, false);
 
@@ -208,7 +211,7 @@ function rebound(ball, racket) {
     if (ballCoords.x <= wallWidth) {
 
         if ((ballCoords.y + ballHeight > racketCoords.y) &&
-            (ballCoords.y < racketCoords.y + racketHeight)) {}
+            (ballCoords.y < racketCoords.y + racketHeight)) { }
     }
 
 }
@@ -216,9 +219,11 @@ function rebound(ball, racket) {
 function PlanNextTick() {
     let ballCoords = ball.getCoords(),
         leftRacketCoords = leftRacket.getCoords(),
-        rightRacketCoords = rightRacket.getCoords();
+        rightRacketCoords = rightRacket.getCoords(),
+        leftSide = document.querySelector('.left-side'),
+        rightSide = document.querySelector('.right-side');
 
-    if (ballCoords.y <= 0 || ballCoords.y >= (FIELD_HEIGTH - ballHeight)) {
+    if ((ballCoords.y <= 0) || (ballCoords.y >= (FIELD_HEIGTH - ballHeight))) {
         ball.changeDirectionY();
     }
 
@@ -227,6 +232,10 @@ function PlanNextTick() {
         if ((ballCoords.y + ballHeight > leftRacketCoords.y) &&
             (ballCoords.y < leftRacketCoords.y + racketHeight)) {
             ball.changeDirectionX();
+        } else {
+            ball.stop();
+            leftSide.innerHTML = +leftSide.textContent + +1;
+            return;
         }
     }
 
@@ -235,6 +244,10 @@ function PlanNextTick() {
         if ((ballCoords.y + ballHeight > rightRacketCoords.y) &&
             (ballCoords.y < rightRacketCoords.y + racketHeight)) {
             ball.changeDirectionX();
+        } else {
+            ball.stop();
+            rightSide.innerHTML = +rightSide.textContent + +1;
+            return;
         }
     }
 
@@ -251,4 +264,18 @@ let RequestAnimationFrame =
         window.setTimeout(callback, 1000 / 60);
     };
 
-PlanNextTick();
+let button = document.querySelector('.start-button');
+
+console.log(button);
+
+button.addEventListener('click', function () {
+    let speeds = [5, -5];
+
+    ball.update();
+    ball.setSpeedX(speeds[randomFunc(0, 1)]);
+    ball.setSpeedY(speeds[randomFunc(0, 1)]);
+    leftRacket.update();
+    rightRacket.update();
+
+    PlanNextTick();
+}, false);
