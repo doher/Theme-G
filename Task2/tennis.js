@@ -154,6 +154,13 @@ class Racket extends Figure {
             element.style.top = FIELD_HEIGTH - element.offsetHeight + 'px';
         }
     }
+
+    stop() {
+        let element = this.getElement(),
+            coord = this.getCoords();
+
+        element.style.top = coord.y + 'px';
+    }
 }
 
 let ballHeight = Math.round(0.09 * FIELD_HEIGTH),
@@ -175,24 +182,58 @@ ball.update();
 leftRacket.update();
 rightRacket.update();
 
+let leftUpTimer,
+    leftDownTimer,
+    rightUpTimer,
+    rightDownTimer;
+
 document.addEventListener('keydown', function (eo) {
     let keyCode = eo.keyCode;
 
     switch (keyCode) {
         case 16:
-            leftRacket.moveUp();
+            leftUpTimer = setInterval(() => {
+                leftRacket.moveUp();
+            }, 16);
             break;
         case 17:
-            leftRacket.moveDown();
+            leftDownTimer = setInterval(() => {
+                leftRacket.moveDown();
+            }, 16);
+
             break;
         case 38:
-            rightRacket.moveUp();
+            rightUpTimer = setInterval(() => {
+                rightRacket.moveUp();
+            }, 16);
             break;
         case 40:
-            rightRacket.moveDown();
+            rightDownTimer = setInterval(() => {
+                rightRacket.moveDown();
+            }, 16);
             break;
     }
 }, false);
+
+document.addEventListener('keyup', function (eo) {
+    let keyCode = eo.keyCode;
+
+    switch (keyCode) {
+        case 16:
+        case 17:
+            clearInterval(leftUpTimer);
+            clearInterval(leftDownTimer);
+            leftRacket.stop();
+            break;
+        case 38:
+        case 40:
+            clearInterval(rightUpTimer);
+            clearInterval(rightDownTimer);
+            rightRacket.stop();
+            break;
+    }
+}, false);
+
 
 function randomFunc(n, m) {
     return Math.floor(Math.random() * (m - n + 1)) + n;
