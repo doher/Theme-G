@@ -2,7 +2,7 @@
 
 const FIELD_WIDTH = 800,
     FIELD_HEIGTH = FIELD_WIDTH / 2,
-    RACKET_SPEED = FIELD_HEIGTH / 20;
+    RACKET_SPEED = 10;
 
 class Figure {
     constructor(height, width, className) {
@@ -252,7 +252,7 @@ function rebound(ball, racket) {
     if (ballCoords.x <= wallWidth) {
 
         if ((ballCoords.y + ballHeight > racketCoords.y) &&
-            (ballCoords.y < racketCoords.y + racketHeight)) { }
+            (ballCoords.y < racketCoords.y + racketHeight)) {}
     }
 
 }
@@ -274,6 +274,7 @@ function PlanNextTick() {
             (ballCoords.y < leftRacketCoords.y + racketHeight)) {
             ball.changeDirectionX();
         } else {
+            isStart = false;
             ball.stop();
             leftSide.innerHTML = +leftSide.textContent + +1;
             return;
@@ -286,6 +287,7 @@ function PlanNextTick() {
             (ballCoords.y < rightRacketCoords.y + racketHeight)) {
             ball.changeDirectionX();
         } else {
+            isStart = false;
             ball.stop();
             rightSide.innerHTML = +rightSide.textContent + +1;
             return;
@@ -305,9 +307,8 @@ let RequestAnimationFrame =
         window.setTimeout(callback, 1000 / 60);
     };
 
-let button = document.querySelector('.start-button');
-
-console.log(button);
+let button = document.querySelector('.start-button'),
+    isStart = false;
 
 button.addEventListener('click', function () {
     let speeds = [5, -5];
@@ -318,5 +319,9 @@ button.addEventListener('click', function () {
     leftRacket.update();
     rightRacket.update();
 
-    PlanNextTick();
+    if (!isStart) {
+        isStart = true;
+        PlanNextTick();
+    }
+
 }, false);
