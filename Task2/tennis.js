@@ -2,7 +2,7 @@
 
 const FIELD_WIDTH = 800,
     FIELD_HEIGTH = FIELD_WIDTH / 2,
-    RACKET_SPEED = 10;
+    RACKET_SPEED = 20;
 
 class Figure {
     constructor(height, width, className) {
@@ -43,8 +43,8 @@ class Figure {
             posY = parseInt(element.style.top);
 
         return {
-            x: posX || 'coord x not found',
-            y: posY || 'coord y not found'
+            x: posX || 0,
+            y: posY || 0
         };
     }
 }
@@ -133,6 +133,16 @@ class Racket extends Figure {
         }
     }
 
+    state() {
+        let element = this.getElement(),
+            coords = this.getCoords(),
+            posX = coords.x,
+            posY = coords.y;
+
+        element.style.left = posX;
+        element.style.top = posY;
+    }
+
     moveUp() {
         let element = this.getElement(),
             coord = this.getCoords();
@@ -140,7 +150,7 @@ class Racket extends Figure {
         element.style.top = (coord.y - RACKET_SPEED) + 'px';
 
         if ((coord.y - RACKET_SPEED) <= 0) {
-            element.style.top = 1 + 'px';
+            element.style.top = 0 + 'px';
         }
     }
 
@@ -182,35 +192,21 @@ ball.update();
 leftRacket.update();
 rightRacket.update();
 
-let leftUpTimer,
-    leftDownTimer,
-    rightUpTimer,
-    rightDownTimer;
-
 document.addEventListener('keydown', function (eo) {
     let keyCode = eo.keyCode;
 
     switch (keyCode) {
         case 16:
-            leftUpTimer = setInterval(() => {
-                leftRacket.moveUp();
-            }, 16);
+            leftRacket.moveUp();
             break;
         case 17:
-            leftDownTimer = setInterval(() => {
-                leftRacket.moveDown();
-            }, 16);
-
+            leftRacket.moveDown();
             break;
         case 38:
-            rightUpTimer = setInterval(() => {
-                rightRacket.moveUp();
-            }, 16);
+            rightRacket.moveUp();
             break;
         case 40:
-            rightDownTimer = setInterval(() => {
-                rightRacket.moveDown();
-            }, 16);
+            rightRacket.moveDown();
             break;
     }
 }, false);
@@ -221,25 +217,22 @@ document.addEventListener('keyup', function (eo) {
     switch (keyCode) {
         case 16:
         case 17:
-            clearInterval(leftUpTimer);
-            clearInterval(leftDownTimer);
             leftRacket.stop();
             break;
         case 38:
         case 40:
-            clearInterval(rightUpTimer);
-            clearInterval(rightDownTimer);
             rightRacket.stop();
             break;
     }
 }, false);
-
 
 function randomFunc(n, m) {
     return Math.floor(Math.random() * (m - n + 1)) + n;
 }
 
 function Tick() {
+    leftRacket.state();
+    rightRacket.state();
     ball.move();
     PlanNextTick();
 }
